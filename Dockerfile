@@ -5,18 +5,21 @@ ENV GO_VERSION=1.13.3
 ENV GO111MODULE=on
 ENV GOPROXY=https://goproxy.io
 
-COPY . ${APP_DIR}
+
 WORKDIR ${APP_DIR}
 
-RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list \
+RUN set -xe  \
+    && sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list \
     && sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g'  /etc/apt/sources.list \
     && apt-get update \
     && apt-get install -y wget\
     && wget -nv https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
     && tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz \
-    && export PATH=$PATH:/usr/local/go/bin \
-    && go build -o gin-rtsp
+    && export PATH=$PATH:/usr/local/go/bin
 
+COPY . ${APP_DIR}
+
+RUN  go build -o gin-rtsp
 
 FROM ubuntu:18.04
 
