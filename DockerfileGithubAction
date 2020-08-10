@@ -15,8 +15,8 @@ RUN set -xe  \
 
 COPY . ${APP_DIR}
 
-RUN go build -o gin-rtsp \
-    && export PATH=$PATH:/usr/local/go/bin
+RUN export PATH=$PATH:/usr/local/go/bin \
+    && go build -o gin-rtsp 
 
 FROM ubuntu:18.04
 
