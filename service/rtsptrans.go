@@ -5,14 +5,11 @@ import (
 	"fmt"
 	"ginrtsp/serializer"
 	"ginrtsp/util"
+	uuid "github.com/satori/go.uuid"
 	"io"
 	"os/exec"
 	"strings"
 	"sync"
-
-	"time"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 // RTSPTransSrv RTSP 转换服务 struct
@@ -62,16 +59,19 @@ func keepFFMPEG(cmd *exec.Cmd, stdin io.WriteCloser, ch *chan int, playCh string
 
 	for {
 		select {
-		case <-*ch:
-			util.Log().Info("Reflush channel %s", playCh)
-
-		case <-time.After(60 * time.Second):
-			_, _ = stdin.Write([]byte("q"))
-			err := cmd.Wait()
-			if err != nil {
-				util.Log().Error("Run ffmpeg err %v", err.Error())
+		case data := <-*ch:
+			switch data {
+			case 2:
+				util.Log().Warning("stop ffmpeg !!")
+				_, _ = stdin.Write([]byte("q"))
+				err := cmd.Wait()
+				if err != nil {
+					util.Log().Error("Run ffmpeg err %v", err.Error())
+				}
+				return
+			default:
+				util.Log().Info("Reflush channel %s data %v", playCh, data)
 			}
-			return
 		}
 	}
 }
@@ -93,7 +93,7 @@ func runFFMPEG(rtsp string, playCh string) (*exec.Cmd, io.WriteCloser, error) {
 		"mpeg1video",
 		"-an",
 		"-s",
-		"960x540",
+		"400x300",
 		fmt.Sprintf("http://127.0.0.1:3000/stream/upload/%s", playCh),
 	}
 

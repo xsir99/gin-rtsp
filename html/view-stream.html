@@ -1,30 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>JSMpeg Stream Client</title>
-	<style type="text/css">
-		html, body {
-			text-align: center;
-		}
-	</style>
+    <title>JSMpeg Stream Client</title>
+    <style type="text/css">
+        html, body {
+            text-align: center;
+        }
+    </style>
 
 </head>
 <body>
-	<canvas id="video-canvas"></canvas>
-
-	<canvas id="video-canvas1"></canvas>
-
-	<script type="text/javascript" src="jsmpeg.min.js"></script>
-	<script type="text/javascript">
-		var canvas = document.getElementById('video-canvas');
-		var url = 'ws://192.168.3.19:4000/stream/live/5b96bff4-bdb2-3edb-9d6e-f96eda03da56';
-		var player = new JSMpeg.Player(url, {canvas: canvas});
 
 
-		var canvas1 = document.getElementById('video-canvas1');
-		var url1 = 'ws://127.0.0.1:3000/stream/live/5b96bff4-bdb2-3edb-9d6e-f96eda03da56';
-		var player1 = new JSMpeg.Player(url1, {canvas: canvas1});
+<canvas id="video-canvas0" style="width: 800px; height: 600px"></canvas>
+<canvas id="video-canvas1"></canvas>
+<canvas id="video-canvas2"></canvas>
+{{/*<canvas id="video-canvas3"></canvas>*/}}
+{{/*<canvas id="video-canvas4"></canvas>*/}}
+{{/*<canvas id="video-canvas5"></canvas>*/}}
+{{/*<canvas id="video-canvas6"></canvas>*/}}
+{{/*<canvas id="video-canvas7"></canvas>*/}}
+{{/*<canvas id="video-canvas8"></canvas>*/}}
+{{/*<canvas id="video-canvas9"></canvas>*/}}
 
-	</script>
+<script type="text/javascript" src="/h/jsmpeg.min.js"></script>
+<script type="text/javascript">
+
+    /**
+     * 获取数据后的处理程序
+     */
+    var urls = [
+        'rtsp://admin:njc500416@192.168.0.11/h264/ch1/sub/av_stream',
+        'rtsp://admin:njc500416@192.168.0.12/h264/ch1/sub/av_stream',
+        'rtsp://admin:njc500416@192.168.0.13/h264/ch1/sub/av_stream',
+        // 'rtsp://admin:njc500416@192.168.0.14/h264/ch1/sub/av_stream',
+        // 'rtsp://admin:njc500416@192.168.0.15/h264/ch1/sub/av_stream',
+        // 'rtsp://admin:njc500416@192.168.0.16/h264/ch1/sub/av_stream',
+        // 'rtsp://admin:njc500416@192.168.0.17/h264/ch1/sub/av_stream',
+        // 'rtsp://admin:njc500416@192.168.0.18/h264/ch1/sub/av_stream',
+        // 'rtsp://admin:njc500416@192.168.0.19/h264/ch1/sub/av_stream',
+        // 'rtsp://admin:njc500416@192.168.0.20/h264/ch1/sub/av_stream',
+    ]
+    urls.forEach((url, index) => {
+        var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
+        httpRequest.open('POST', 'http://192.168.0.86:3000/stream/play', true); //第二步：打开连接
+        httpRequest.setRequestHeader("Content-type", "application/json");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）
+        httpRequest.send('{"url":"' + url + '"}');//发送请求 将情头体写在send中
+        httpRequest.onreadystatechange = function (res) {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+            if (res.target.status == 200) {//验证请求是否发送成功
+                var data  = JSON.parse(res.target.response)
+                var path = data.data.path
+                var url1 = 'ws://192.168.0.86:3000' + path;
+                var canvas = document.getElementById('video-canvas' + index);
+                new JSMpeg.Player(url1, {canvas: canvas});
+            }
+        };
+    })
+
+
+    function setPlayerSource(newSource) {
+
+    }
+
+</script>
 </body>
 </html>

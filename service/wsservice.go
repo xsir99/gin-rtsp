@@ -95,6 +95,9 @@ func (manager *clientManager) Start() {
 					if len(manager.clientGroup[client.Group]) == 0 {
 						util.Log().Info("Clear no client group %s", client.Group)
 						delete(manager.clientGroup, client.Group)
+						if ch, ok := processMap.Load(client.Group); ok {
+							*ch.(*chan int) <- 2
+						}
 					}
 				}
 			}

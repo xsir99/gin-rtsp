@@ -13,7 +13,7 @@ func Init() {
 	godotenv.Load()
 
 	if os.Getenv("GIN_MODE") == "release" {
-		util.BuildLogger("info")
+		util.BuildLogger("warning")
 	} else {
 		util.BuildLogger("debug")
 	}
