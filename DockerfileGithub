@@ -3,7 +3,6 @@ FROM ubuntu:18.04 as builder
 ENV APP_DIR=/go/src
 ENV GO_VERSION=1.13.3
 ENV GO111MODULE=on
-ENV GOPROXY=https://goproxy.io
 
 
 WORKDIR ${APP_DIR}
