@@ -11,12 +11,12 @@ RUN set -xe  \
     && apt-get update \
     && apt-get install -y wget\
     && wget -nv https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
-    && tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz \
-    && export PATH=$PATH:/usr/local/go/bin
+    && tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz 
 
 COPY . ${APP_DIR}
 
-RUN  go build -o gin-rtsp
+RUN go build -o gin-rtsp \
+    && export PATH=$PATH:/usr/local/go/bin
 
 FROM ubuntu:18.04
 
