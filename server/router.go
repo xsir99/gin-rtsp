@@ -11,6 +11,7 @@ import (
 func NewRouter() *gin.Engine {
 	r := gin.Default()
 	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
 	config.AllowHeaders = []string{"*"}
 	r.Use(cors.New(config))
 
