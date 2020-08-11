@@ -10,7 +10,9 @@ import (
 // NewRouter Gin 路由配置
 func NewRouter() *gin.Engine {
 	r := gin.Default()
-	r.Use(cors.Default())
+	config := cors.DefaultConfig()
+	config.AllowHeaders = []string{"*"}
+	r.Use(cors.New(config))
 
 	// 路由
 	r.GET("/ping", api.Ping)
