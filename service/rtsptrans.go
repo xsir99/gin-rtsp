@@ -93,7 +93,7 @@ func runFFMPEG(rtsp string, playCh string) (*exec.Cmd, io.WriteCloser, error) {
 		"mpeg1video",
 		"-an",
 		"-s",
-		"400x300",
+		"480x270",
 		fmt.Sprintf("http://127.0.0.1:3000/stream/upload/%s", playCh),
 	}
 
